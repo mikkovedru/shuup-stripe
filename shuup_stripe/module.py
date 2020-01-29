@@ -14,12 +14,12 @@ from shuup_stripe.utils import get_amount_info
 def _handle_stripe_error(charge_data):
     error_dict = charge_data.get("error")
     if error_dict:
-        raise Problem("Stripe: %(message)s (%(type)s)" % error_dict)
+        raise Problem("Error! Stripe: %(message)s (%(type)s)." % error_dict)
     failure_code = charge_data.get("failure_code")
     failure_message = charge_data.get("failure_message")
     if failure_code or failure_message:
         raise Problem(
-            _("Stripe: %(failure_message)s (%(failure_code)s)") % charge_data
+            _("Stripe: %(failure_message)s (%(failure_code)s).") % charge_data
         )
 
 
@@ -63,7 +63,7 @@ class StripeCharger(object):
         charge_data = resp.json() if hasattr(resp, "json") else resp
         _handle_stripe_error(charge_data)
         if not charge_data.get("paid"):
-            raise Problem(_("Stripe Charge does not say 'paid'"))
+            raise Problem(_("Stripe Charge does not say 'paid'."))
 
         return self.order.create_payment(
             self.order.taxful_total_price,

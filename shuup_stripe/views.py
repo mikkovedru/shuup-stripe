@@ -47,13 +47,13 @@ class StripeSavedPaymentInfoView(DashboardViewMixin, TemplateView):
                     )
 
             except stripe.error.StripeError:
-                LOGGER.exception("Failed to create Stripe Customer")
+                LOGGER.exception("Error! Failed to create Stripe Customer.")
                 stripe_customer = None
 
         if stripe_customer:
-            messages.success(request, _("Payment details successfully saved."))
+            messages.success(request, _("Payment details saved."))
         else:
-            messages.error(request, _("Error while saving payment details."))
+            messages.error(request, _("Failed to save payment details."))
 
         return HttpResponseRedirect(reverse("shuup:stripe_saved_payment"))
 
@@ -93,10 +93,10 @@ class StripeDeleteSavedPaymentInfoView(View):
                 customer = stripe.Customer.retrieve(stripe_customer.customer_token)
                 customer.sources.retrieve(source_id).delete()
             except stripe.error.StripeError:
-                LOGGER.exception("Failed to delete Stripe source")
+                LOGGER.exception("Error! Failed to delete Stripe source.")
                 messages.error(request, _("Unknown error while removing payment details."))
 
             else:
-                messages.success(request, _("Payment successfully removed."))
+                messages.success(request, _("Payment was removed."))
 
         return HttpResponseRedirect(reverse("shuup:stripe_saved_payment"))

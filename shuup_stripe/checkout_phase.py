@@ -40,7 +40,7 @@ class StripeCheckoutPhase(CheckoutPhaseViewMixin, FormView):
         secret_key = payment_processor.secret_key
         if not (publishable_key and secret_key):
             raise Problem(
-                _("Please configure Stripe keys for payment processor %s.") %
+                _("Please configure Stripe keys for payment processor `%s`.") %
                 payment_processor)
 
         config = {
@@ -68,7 +68,7 @@ class StripeCheckoutPhase(CheckoutPhaseViewMixin, FormView):
                     customer = stripe.Customer.retrieve(stripe_customer.customer_token)
                     context["stripe_customer_data"] = customer.to_dict()
                 except stripe.error.StripeError:
-                    LOGGER.exception("Failed to fetch Stripe customer")
+                    LOGGER.exception("Error! Failed to fetch Stripe customer.")
 
         return context
 
